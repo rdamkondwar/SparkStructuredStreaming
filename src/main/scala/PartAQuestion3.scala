@@ -3,6 +3,7 @@ import org.apache.spark.sql.streaming.ProcessingTime
 import org.apache.spark.sql.types.StructType
 
 object PartAQuestion3 {
+  //TODO: Add reading static files and join
    def main(args: Array[String]) {
    val dirPath: String = args(0)
    val spark = SparkSession.builder.appName("PartAQuestion3")
