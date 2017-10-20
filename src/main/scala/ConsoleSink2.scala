@@ -30,6 +30,8 @@ class CustomConsoleSink() extends StreamSinkProvider {
         data.sparkSession.createDataFrame(
           data.sparkSession.sparkContext.parallelize(data.collect()), data.schema)
           .collect().foreach(println)
+
+        println("Total size= " +data.count())
       }
     }
   }
