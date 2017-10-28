@@ -6,22 +6,29 @@ object PartAQuestion3 {
   //TODO: Add reading static files and join
    def main(args: Array[String]) {
    val dirPath: String = args(0)
+   val inputListPath : String = args(1)
    val spark = SparkSession.builder.appName("PartAQuestion3")
    //.config("spark.eventLog.enabled", "true")
    //.config("spark.eventLog.dir", "hdfs://10.254.0.146/spark/history")
-   .config("spark.sql.streaming.checkpointLocation", ".")
+   .config("spark.sql.streaming.checkpointLocation", "/tmp/spark-ck")
    .getOrCreate()
 
    //spark.sparkContext.setCheckpointDir(".")
 
    spark.sparkContext.setLogLevel("ERROR")
 
+   import spark.implicits._
+   //val userList = spark.sparkContext.textFile(inputListPath)
+   val userList = spark.read.text(inputListPath).map(r => r(0).asInstanceOf[String].toLong).withColumnRenamed("value", "targetUser")
+
+   userList.collect().foreach(println);
+   userList.printSchema()
+
    val userSchema = new StructType().add("userA", "long").add("userB", "long").add("timestamp", "timestamp").add("action", "string")
 
    val csvDF = spark.readStream.option("sep", ",").schema(userSchema).csv(dirPath)
 
-
-   val wordCounts = csvDF.groupBy("userA").count()
+   val wordCounts = csvDF.join(userList, csvDF.col("userA").equalTo(userList.col("targetUser"))).groupBy("userA").count()
 
    // val length: Long = (wordCounts.groupBy().count().writeStream.start()).first().get(0).asInstanceOf[Long]
 

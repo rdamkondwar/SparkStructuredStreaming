@@ -3,7 +3,7 @@ import org.apache.spark.sql.sources.StreamSinkProvider
 import org.apache.spark.sql.streaming.OutputMode
 import org.apache.spark.sql.{DataFrame, SQLContext}
 
-class CustomConsoleSink() extends StreamSinkProvider {
+class CustomConsoleSink extends StreamSinkProvider {
 
   // Track the batch id
   private var lastBatchId = -1L
