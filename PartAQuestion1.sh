@@ -2,7 +2,7 @@
 
 start_spark_job() {
     $SPARK_HOME/bin/spark-submit --class PartAQuestion1 --master spark://10.254.0.146:7077 \
-                                 /home/ubuntu/rohit/assignment2/target/scala-2.11/sparkstreaming_2.11-1.0.jar \
+	                         /home/ubuntu/rohit/assignment2/SparkStructuredStreaming/target/scala-2.11/sparkstreaming_2.11-1.0.jar \
 	                         hdfs:///spark-streaming/stream
 }
 

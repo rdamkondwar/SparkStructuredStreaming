@@ -6,9 +6,13 @@ object PartAQuestion1 {
    def main(args: Array[String]) {
    val dirPath: String = args(0)
    val spark = SparkSession.builder.appName("PartAQuestion1")
-   //.config("spark.eventLog.enabled", "true")
-   //.config("spark.eventLog.dir", "hdfs://10.254.0.146/spark/history")
-   .config("spark.sql.streaming.checkpointLocation", "/spark-streaming/checkpoint_dir")
+   .config("spark.driver.memory", "1g")
+   .config("spark.cores.max", "6")
+   .config("spark.eventLog.enabled","true")
+   .config("spark.eventLog.dir", "hdfs://10.254.0.146/spark/history")
+   .config("spark.executor.cores", "4")
+   .config("spark.task.cpus", "1")
+   .config("spark.sql.streaming.checkpointLocation", "/spark-streaming/checkpoint_1")
    .getOrCreate()
 
    spark.sparkContext.setLogLevel("ERROR")
@@ -19,7 +23,7 @@ object PartAQuestion1 {
    val csvDF = spark.readStream.option("sep", ",").schema(userSchema).csv(dirPath)
 
    val wordCounts = csvDF.groupBy(window($"timestamp", "60 minutes", "30 minutes"),$"action").count().orderBy($"window", $"action")
-   val query = wordCounts.writeStream.outputMode("complete").format(classOf[CustomConsoleSink].getCanonicalName).option("checkpointLocation", false).start()
+   val query = wordCounts.writeStream.outputMode("complete").format(classOf[CustomConsoleSink].getCanonicalName).start()
    query.awaitTermination()
    }
 }
