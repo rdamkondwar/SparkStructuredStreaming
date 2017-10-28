@@ -8,6 +8,7 @@ object PartAQuestion2 {
    val spark = SparkSession.builder.appName("PartAQuestion2")
    //.config("spark.eventLog.enabled", "true")
    //.config("spark.eventLog.dir", "hdfs://10.254.0.146/spark/history")
+   .config("spark.sql.streaming.checkpointLocation", "/spark-streaming/checkpoint_dir")
    .getOrCreate()
 
    spark.sparkContext.setLogLevel("ERROR")
